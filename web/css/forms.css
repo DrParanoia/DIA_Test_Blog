@@ -1,0 +1,25 @@
+form.login {
+	display: block;
+	margin-top: 100px;
+	border: 0px blue solid;
+}
+
+form.login label {
+	display: block;
+	margin: 10px 0 5px;
+}
+form.login label.error {
+	color: red;
+}
+
+form.login input {
+	width: 150px;
+	height: 25px;
+	border: 1px solid grey;
+}
+
+form.login button {
+	display: block;
+	margin: 10px auto;
+	padding: 5px 20px;
+}

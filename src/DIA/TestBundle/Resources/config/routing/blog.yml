@@ -1,0 +1,79 @@
+blog_main:
+    pattern:  /
+    defaults: { _controller: DIATestBundle:Blog:main}
+
+blog_main_by_user:
+    pattern:  /{userId}
+    defaults: { _controller: DIATestBundle:Blog:getBlog, userId:0}
+    requirements:
+        userId:  \d+
+
+repost:
+    pattern: /rePost
+    defaults: {_controller: DIATestBundle:Blog:rePost}
+    requirements:
+        _method: POST
+delete_post:
+    pattern: /deletePost
+    defaults: {_controller: DIATestBundle:Blog:deletePost}
+    requirements:
+        _method: POST 
+
+make_post:
+    pattern: /makePost
+    defaults: {_controller: DIATestBundle:Blog:makePost}
+    requirements:
+        _method: POST
+reply_to_post:
+    pattern: /replyToPost
+    defaults: {_controller: DIATestBundle:Blog:replyToPost}
+    requirements:
+        _method: POST
+get_conv:
+    pattern: /getConv/{id}
+    defaults: {_controller: DIATestBundle:Blog:getConv}
+    requirements:
+        id: \d+
+
+test:
+    pattern: /test
+    defaults: {_controller: DIATestBundle:Blog:test}
+
+blog_settings:
+    pattern: /settings
+    defaults: { _controller: DIATestBundle:Blog:settings}
+
+search_users:
+    pattern: /searchUsers
+    defaults: {_controller: DIATestBundle:Blog:searchUsers}
+
+search_get_users:
+    pattern: /searchGetUsers
+    defaults: {_controller: DIATestBundle:Blog:searchGetUsers}
+    requirements:
+        _method: POST
+
+change_follow_status:
+    pattern: /changeFollowStatus
+    defaults: {_controller: DIATestBundle:Blog:changeFollowStatus}
+    requirements:
+        _method: POST
+
+blog_i_follow:
+    pattern: /iFollow
+    defaults: {_controller: DIATestBundle:Blog:iFollow}
+blog_my_followers:
+    pattern: /myFollowers
+    defaults: {_controller: DIATestBundle:Blog:myFollowers}
+
+get_mustache:
+    pattern: /getMustacheTemplate/{template}
+    defaults: {_controller: DIATestBundle:Blog:getMustacheTemplate}
+    requirements:
+        _method: GET
+
+blog_test:
+    pattern:  /{test}
+    defaults: { _controller: DIATestBundle:Blog:test}
+    requirements:
+        test:  \d+

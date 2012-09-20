@@ -1,4 +1,9 @@
-# Internal routing configuration to handle ESI
-#_internal:
-#   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
-#   prefix:   /_internal
+DIATestBundle:
+    resource: "@DIATestBundle/Resources/config/routing.yml"
+    prefix:   /
+
+login:
+    pattern:  /login
+
+logout:
+    pattern:  /logout

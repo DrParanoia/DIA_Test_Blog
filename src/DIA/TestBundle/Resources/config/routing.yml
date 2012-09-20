@@ -1,0 +1,11 @@
+DIATestBundle_homepage:
+    pattern:  /
+    defaults: { _controller: DIATestBundle:Welcome:welcome}
+
+register:
+    pattern:  /register
+    defaults: { _controller: DIATestBundle:Welcome:register }
+
+DIATestBundle_main:
+    resource: "@DIATestBundle/Resources/config/routing/blog.yml"
+    prefix:   /blog

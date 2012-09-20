@@ -1,0 +1,27 @@
+{% extends 'DIATestBundle::layout.html.twig' %}
+
+{% block stylesheets %}      
+	<link href="{{ asset('css/blog.css') }}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+	<a class="logout" href="{{path('logout')}}">{{'Logout' | trans}}</a>
+{% endblock %}
+
+{% block body %}
+		<div class="blogUserData">
+			<img src="{{profileImage ? profileImage : asset('img/no_photo.jpg')}}" alt="Profile Image" class="profileImage">
+			<ul>
+				<li><a href="{{path('blog_settings')}}">{{'Profile settings' | trans}}</a></li>
+				<li><a href="{{path('blog_i_follow')}}">{{'I follow' | trans}}</a></li>
+				<li><a href="{{path('blog_my_followers')}}">{{'My followers' | trans}}</a></li>
+				<li><a href="{{path('search_users')}}">{{'Search for users' | trans}}</a></li>
+				<li><a href="{{path('blog_main')}}">{{'My blog' | trans}}</a></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+		<div class="blogUserMessageContainer">
+			{% block container %}{% endblock %}
+		</div>
+		<div class="clear"></div>
+{% endblock %}

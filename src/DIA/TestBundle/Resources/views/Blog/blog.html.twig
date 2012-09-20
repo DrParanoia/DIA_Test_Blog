@@ -1,0 +1,88 @@
+{% extends 'DIATestBundle:Blog:main.html.twig' %}
+
+{% block scripts %}
+	<script src="{{ asset('js/mustache.js') }}"></script>
+	<script src="{{ asset('js/mustache_jquery.js') }}"></script>
+	<script src="{{ asset('js/blog.js') }}"></script>
+{% endblock %}
+
+{% block container %}
+	<h3>{{blogHeader}}</h3>
+	{% if composeMessage %}
+		<div class="newMessageContainer">
+			<textarea id="postBody"></textarea>
+			<button id="postButton">Написать</button>
+		</div>
+	{% endif %}
+	<input type="hidden" id="user_id" value="{{userId}}">
+	<div id="blogMessages">
+		{% if blogCount %}
+			{% for post in blog %}
+				{% set postId = post.getId() %}
+				{% if post.getReplyTo().count %} 
+					{% set orId = post.getReplyTo().first().getId() %}
+				{% else %}
+					{% set orId = post.getId() %}
+				{% endif %}
+				<div id="post_{{postId}}" data-post_id="{{postId}}" data-original_id="{{orId}}" class="post{% if post.getReplyTo().count %} isReply{% elseif post.getReplies().count %} hasReplies{% else %} simple{% endif %}">
+					<div class="wrapper">
+						<div class="header">
+							<span class="username">
+								{{'Author' | trans}}:&nbsp;
+								{% if post.getUser().getId() == userId %}							
+									<a href="{{ path('blog_main_by_user', {'userId': post.getUser().getId() }) }}">{{'Me' | trans}}</a>
+								{% else %}
+									<a href="{{ path('blog_main_by_user', {'userId': post.getUser().getId() }) }}">{{post.getUser().getUsername()}}</a>
+								{% endif %}
+
+								{% if post.getOriginalPost().count %}
+									({{'Reposted from:' | trans}}&nbsp;<a href="{{ path('blog_main_by_user', {'userId': post.getOriginalPost().first().getUser().getId() }) }}">{{post.getOriginalPost().first().getUser().getUsername()}}</a>)
+								{% endif %}
+
+							</span>
+							<span class="date">
+								{{post.getCreatedat() | date("d.m.Y H:i")}}
+							</span>
+						</div>
+						<p class="body">
+							{% if post.getOriginalPost().count %}
+								{{post.getOriginalPost().first().getBody()}}
+							{% else %}
+								{{post.getBody()}}
+							{% endif %}
+						</p>
+						<div class="footer">
+							{% if post.getReplyTo().count or post.getReplies().count %}
+								<span class="showConv">{{'Show conversation' | trans}}</span>
+								<span class="hideConv">{{'Hide conversation' | trans}}</span>
+							{% else %}
+								<span class="showConv hidden">{{'Show conversation' | trans}}</span>
+								<span class="hideConv hidden">{{'Hide conversation' | trans}}</span>
+							{% endif %}
+								<span class="reply">{{'Reply' | trans}}</span>
+							{% if userId != post.getUser().getId() %}
+								{% if post.isRepostedBy(userId) %}
+									<span class="info">{{'Already reposted' | trans}}</span>
+								{% else %}
+									<span class="repostButton">{{'Repost' | trans}}</span>
+								{% endif %}
+							
+							{% else %}
+								<span class="deleteButton right">{{'Delete' | trans}}</span>
+							{% endif %}
+						</div>
+						<div class="replyForm">
+							<textarea class="postBody"></textarea>
+							<button class="replyButton">{{'Reply' | trans}}</button>
+							<span class="closeReply">{{'Close' | trans}}</span>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% elseif userId == blogOwnerId %}
+			<div class="info">{{"You don't have any posts yet" | trans}}</div>
+		{% else %}
+			<div class="info">{{"No posts yet" | trans}}</div>
+		{% endif %}
+	</div>
+{% endblock %}

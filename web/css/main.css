@@ -1,0 +1,72 @@
+body {
+	font-family: Tahoma, Arial;
+	text-align: center;
+	font-size: 14px;
+	font-weight: normal;
+	overflow-y: scroll; 
+}
+
+h3 {
+	font-size: 22px;
+	font-weight: bold;
+	margin: 20px;
+}
+
+.hidden {
+	display: none;
+}
+
+a {
+	text-decoration: none;
+	color: blue;
+}
+a.current {
+	font-weight: bold;
+}
+
+div.info {
+	margin: 5px;
+	padding: 15px;
+	text-align: center;
+	color: #007700;
+	border: 2px solid #007700;
+	background: #e6fee6;
+	font-weight: bold;
+}
+
+.clear {
+	clear: both;
+}
+
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}
+
+.logout {
+	float: right;
+	margin: 5px;
+}
+
+.mainContainer {
+	width: 960px;
+	margin: auto;
+	border: 0px solid red;
+	min-height: 400px;
+	height: 100%;
+}
+
+.head {
+	height: 30px;
+	border: 1px blue solid;
+}
+
+ul.lang {
+	margin-right: 10px;
+}
+ul.lang li {
+	float: left;
+	margin: 5px;
+}

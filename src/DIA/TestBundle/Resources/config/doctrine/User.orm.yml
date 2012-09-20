@@ -1,0 +1,46 @@
+DIA\TestBundle\Entity\User:
+  type: entity
+  table: user
+  id:
+    id:
+      type: integer
+      generator: { strategy: AUTO }
+  fields:
+    username:
+      type: string
+      length: 50
+    password:
+      type: string
+      length: 40
+    first_name:
+      type: string
+      length: 40
+    last_name:
+      type: string
+      length: 40
+    roles:
+      type: string
+      length: 40
+      default: 'ROLE_USER'
+  oneToMany:
+    posts:
+      targetEntity: BlogPosts
+      mappedBy: user
+      orderBy: {"id": "DESC"}
+      cascade: ["persist"]
+      orphanRemoval: true
+  manyToMany:
+    followedByMe:
+      targetEntity: User
+      inversedBy: myFollowers
+      joinTable:
+        name: user_followers
+        joinColumns:
+          follower_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          user_id:
+            referencedColumnName: id
+    myFollowers:
+      targetEntity: User
+      mappedBy: followedByMe

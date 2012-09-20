@@ -1,0 +1,38 @@
+<script id="user-search-result" type="text/html">
+	<%#users%>
+		<div class="foundUserDiv">
+			<div class="loadingBlocker"><img src="{{asset('img/loading.gif')}}"></div>
+			<img src="<%^profileImage%>/img/no_photo.jpg<%/profileImage%>" alt="Profile Image" class="profileImage small">
+			<div class="userInfo">
+				<div class="username"><a href="<%id%>"><%username%></a></div>
+				<div class="first_name"><%first_name%></div>
+				<div class="last_name"><%last_name%></div>
+			</div>
+			<div class="buttonContainer">
+				<%#followed%>
+					<div class="followButton" data-user_id="<%id%>" data-following="yes">
+						{{"Unfollow" | trans}}
+					</div>
+				<%/followed%>
+				<%^followed%>
+					<div class="followButton" data-user_id="<%id%>" data-following="no">
+						{{"Follow" | trans}}
+					</div>					
+				<%/followed%>
+				<div class="followInfo"><%#follower%>{{"Is following you" | trans}}<%/follower%></div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	<%/users%>
+	<%^users%>
+		{{"No users found" | trans}}
+	<%/users%>
+</script>
+
+<script id="user-is-followed" type="text/html">
+	{{"Unfollow" | trans}}
+</script>
+
+<script id="user-not-followed" type="text/html">
+	{{"Follow" | trans}}
+</script>

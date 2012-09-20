@@ -1,0 +1,26 @@
+{% extends 'DIATestBundle:Blog:main.html.twig' %}
+
+{% block stylesheets %}      
+	<link href="{{ asset('css/blog.css') }}" type="text/css" rel="stylesheet">
+	<link href="{{ asset('css/search.css') }}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ asset('js/mustache.js') }}"></script>
+	<script src="{{ asset('js/mustache_jquery.js') }}"></script>
+	<script src="{{ asset('js/searchUsers.js') }}"></script>
+{% endblock %}
+
+{% block container %}
+	<h3>{{'Search for users' | trans}}</h3>
+	<div class="searchContainer">
+		<input type="text" id="search_value">
+		<div class="ajaxLoading">
+			<img src="{{ asset('img/loading_1.gif') }}">
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="searchResult" id="userDivContainer">
+		{{"No users found" | trans}}
+	</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'DIATestBundle::layout.html.twig' %}
+
+{% block stylesheets %}      
+	<link href="{{ asset('css/forms.css') }}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+		<h3>{{'Registration successfull' | trans}}</h3>
+		<a href="{{path('DIATestBundle_homepage')}}">{{'Main page' | trans}}</a>
+{% endblock %}

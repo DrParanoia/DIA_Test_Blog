@@ -47,6 +47,10 @@
     target=/bundles/JMS/SecurityExtraBundle
     version=origin/1.0.x
 
+[JMSI18nRoutingBundle]
+    git=git://github.com/schmittjoh/JMSI18nRoutingBundle.git
+    target=bundles/JMS/I18nRoutingBundle
+
 [SensioDistributionBundle]
     git=http://github.com/sensio/SensioDistributionBundle.git
     target=/bundles/Sensio/Bundle/DistributionBundle

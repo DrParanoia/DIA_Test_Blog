@@ -1,0 +1,22 @@
+{% extends 'DIATestBundle::layout.html.twig' %}
+
+{% block stylesheets %}      
+	<link href="{{ asset('css/forms.css') }}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+		<h3>{{'Welcome!' | trans}}</h3>
+		{% if error %}
+				<div>{{ error.message | trans }}</div>
+		{% endif %}
+		<form action="{{ path('login') }}" method="post" class="login">
+				<label for="username">{{'Username' | trans}}:</label>
+				<input type="text" id="username" name="_username" value="{{ last_username }}">
+
+				<label for="password">{{'Password' | trans}}:</label>
+				<input type="password" id="password" name="_password">
+
+		  	<button type="submit">{{'Login' | trans}}</button>
+		</form>
+		<a href="{{path('register')}}">{{'Registration' | trans}}</a>
+{% endblock %}

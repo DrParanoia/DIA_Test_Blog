@@ -1,0 +1,54 @@
+DIA\TestBundle\Entity\BlogPosts:
+  type: entity
+  table: blog_posts
+  id:
+    id:
+      type: integer
+      generator: { strategy: AUTO }
+  fields:
+    body:
+      type: text
+    created_at:
+      type: datetime
+  manyToMany:
+    replies:
+      targetEntity: BlogPosts
+      inversedBy: replyTo
+      orderBy: {"id": "DESC"}
+      orphanRemoval: true
+      joinTable:
+        name: blog_post_replies
+        joinColumns:
+          reply_to_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          reply_id:
+            referencedColumnName: id
+    replyTo:
+      targetEntity: BlogPosts
+      mappedBy: replies
+    reposts:
+      targetEntity: BlogPosts
+      inversedBy: originalPost
+      orderBy: {"id": "DESC"}
+      joinTable:
+        name: blog_post_reposts
+        joinColumns:
+          original_post_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          repost_id:
+            referencedColumnName: id
+    originalPost:
+      targetEntity: BlogPosts
+      mappedBy: reposts
+  manyToOne:
+    user:
+      targetEntity: User
+      inversedBy: posts
+      joinColumns:
+        user_id:
+          referencedColumnName: id
+          nullable: false
+  lifecycleCallbacks:
+    prePersist: [ setCreatedAtValue ]

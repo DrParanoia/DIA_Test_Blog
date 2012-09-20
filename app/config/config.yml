@@ -2,9 +2,15 @@ imports:
     - { resource: parameters.ini }
     - { resource: security.yml }
 
+
+jms_i18n_routing:
+    strategy: prefix
+    locales: [en, ru]
+    default_locale: ru
+
 framework:
     #esi:             ~
-    #translator:      { fallback: %locale% }
+    translator:      { enabled: true, fallback: %locale% }
     secret:          %secret%
     charset:         UTF-8
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -19,7 +25,7 @@ framework:
 # Twig Configuration
 twig:
     debug:            %kernel.debug%
-    strict_variables: %kernel.debug%
+    strict_variables: false
 
 # Assetic Configuration
 assetic:

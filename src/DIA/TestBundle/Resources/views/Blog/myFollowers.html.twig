@@ -1,0 +1,46 @@
+{% extends 'DIATestBundle:Blog:main.html.twig' %}
+
+{% block stylesheets %}      
+	<link href="{{ asset('css/blog.css') }}" type="text/css" rel="stylesheet">
+	<link href="{{ asset('css/search.css') }}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ asset('js/mustache.js') }}"></script>
+	<script src="{{ asset('js/mustache_jquery.js') }}"></script>
+	<script src="{{ asset('js/searchUsers.js') }}"></script>
+{% endblock %}
+
+{% block container %}
+	<h3>{{'My followers' | trans}}</h3>
+	<div id="userDivContainer">
+		{% if users.count %}
+			{% for user in users %}
+				<div class="foundUserDiv">
+					<div class="loadingBlocker"><img src="{{asset('img/loading.gif')}}"></div>
+					<img src="/img/no_photo.jpg" alt="Profile Image" class="profileImage small">
+					<div class="userInfo">
+						<div class="username"><a href="{{user.getId()}}">{{user.getUsername()}}</a></div>
+						<div class="first_name">{{user.getFirstname()}}</div>
+						<div class="last_name">{{user.getLastname()}}</div>
+					</div>
+					<div class="buttonContainer">
+						{% if user.getId() in iFollow %}
+							<div class="followButton" data-user_id="{{user.getId()}}" data-following="yes">
+								{{"Unfollow" | trans}}
+							</div>
+						{% else %}
+							<div class="followButton" data-user_id="{{user.getId()}}" data-following="no">
+								{{"Follow" | trans}}
+							</div>							
+						{% endif %}
+						<div class="followInfo">{{"Is following you" | trans}}</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+			{% endfor %}
+		{% else %}
+			{{'You are not followed by anyone!' | trans}}
+		{% endif %}
+	</div>
+{% endblock %}

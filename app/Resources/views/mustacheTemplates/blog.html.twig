@@ -1,0 +1,50 @@
+<script id="blog-post" type="text/html">
+	<div class="post">
+		<div class="wrapper">
+			<div class="header">
+				<span class="username">
+					{{'Author' | trans}}:&nbsp;
+					<a href="{{userId}}">{{'Me' | trans}}</a>
+				</span>
+				<span class="date">
+					<%date%>
+				</span>
+			</div>
+			<p class="body">
+				<%body%>
+			</p>
+		</div>
+	</div>
+</script>
+<script id="blog-post-conv" type="text/html">
+	<div data-post_id="<%id%>" data-original_id="<%original_id%>" class="post <%cl%>">
+		<div class="wrapper">
+			<div class="header">
+				<span class="username">
+					{{'Author' | trans}}:&nbsp;
+					<%^owner%>
+						<a href="<%userId%>"><%username%></a>
+					<%/owner%>
+					<%#owner%>
+						<a href="<%userId%>">{{'Me' | trans}}</a>
+					<%/owner%>					
+				</span>
+				<span class="date">
+					<%created%>
+				</span>
+			</div>
+			<p class="body">
+				<%body%>
+			</p>
+			<div class="footer">
+				<span class="reply">{{'Reply' | trans}}</span>
+			</div>
+			<div class="replyForm">
+				<textarea class="postBody"></textarea>
+				<button class="replyButton">{{'Reply' | trans}}</button>
+				<span class="closeReply">{{'Close' | trans}}</span>
+				<div class="clear"></div>				
+			</div>
+		</div>
+	</div>
+</script>
