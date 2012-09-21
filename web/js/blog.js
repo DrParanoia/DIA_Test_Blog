@@ -1,3 +1,70 @@
+$(document).ready(function() {
+	$.Mustache.load('getMustacheTemplate/blog');
+
+	$("#blogMessages").on('click', '.post .footer .repostButton', function(){
+		repost(this);
+	});
+
+	$("#blogMessages").on('click', '.post .footer .deleteButton', function(){
+		deletePost(this);
+	});
+
+	$("#blogMessages").on('click', '.post .footer .showConv', function(){
+		getReplies(this);
+	});
+	$("#blogMessages").on('click', '.post .footer .hideConv', function(){
+		clearReplies(this);
+	});
+	$("#blogMessages").on('click', '.post .footer .openReply', function(){
+		openReplyForm(this);
+	});
+	$("#blogMessages").on('click', '.post .replyForm .closeReply', function(){
+		closeReplyForm(this);
+	});
+
+	$("#blogMessages").on('click', '.post .replyForm .replyButton', function(){
+		reply(this);
+	});
+
+	$("#postButton").click(makePost);
+});
+function openReplyForm(button) {
+  button = $(button);
+	button.hide();
+	var container = button.closest(".wrapper");
+	var form = container.find(".replyForm");
+
+	form.slideDown(100);
+}
+function closeReplyForm(button) {
+	button = $(button);
+
+	var form = button.closest(".replyForm");
+
+	var replyButton = button.closest(".wrapper").find(".footer .reply").show();
+
+	form.slideUp(100);
+}
+function makePost() {
+	var body = $.trim($("#postBody").val());
+	if(body === '') {
+
+	} else {
+		this.disabled = true;
+		$.ajax({
+			url: 'makePost',
+			type: 'POST',
+			dataType: 'json',
+			data: {body: body},
+			success: function(data) {
+				
+			},
+			complete: function() {
+				location.reload(true);
+			}
+		});
+  }		
+}
 function clearReplies(button, toggleButtons) {
 	var post = $(button).parents("div.post").last();
 
@@ -6,6 +73,36 @@ function clearReplies(button, toggleButtons) {
 	if(!toggleButtons) {
 		post.find(".hideConv").hide();
 		post.find(".showConv").show();
+	}
+}
+
+function reply(button) {
+	var post = $(button).parents("div.post");
+	var form = $(button).closest(".replyForm");
+	var original_id = post.data("original_id");
+	var textArea = form.find(".postBody");
+	var body = $.trim(textArea.val());
+
+	if(body === '') {
+
+	} else {
+		button.disabled = true;
+		$.ajax({
+			url: 'replyToPost',
+			type: 'POST',
+			dataType: 'json',
+			data: {body: body, original_id: original_id},
+			success: function(data) {
+				closeReplyForm(button);
+
+				textArea.val('');
+
+				getReplies(button);
+			},
+			complete: function() {
+				button.disabled = false;
+			}
+		});
 	}
 }
 
@@ -98,105 +195,3 @@ function getReplies(button) {
 		}
 	});
 }
-
-function closeReplyForm(button) {
-	var button = $(button);
-
-	var form = button.closest(".replyForm");
-
-	var replyButton = button.closest(".wrapper").find(".footer .reply").show();
-
-	form.slideUp(100);
-}
-
-$(document).ready(function() {
-	$.Mustache.load('getMustacheTemplate/blog');
-
-	$("#blogMessages").on('click', '.post .footer .repostButton', function(){
-		repost(this);
-	});
-
-	$("#blogMessages").on('click', '.post .footer .deleteButton', function(){
-		deletePost(this);
-	});
-
-	$("#blogMessages").on('click', '.post .footer .showConv', function(){
-		getReplies(this);
-	});
-	$("#blogMessages").on('click', '.post .footer .hideConv', function(){
-		clearReplies(this);
-	});
-	$("#blogMessages").on('click', '.post .footer .reply', function(){
-		var button = $(this);
-		button.hide();
-		var container = button.closest(".wrapper");
-		var form = container.find(".replyForm");
-
-		form.slideDown(100);
-	});
-
-	$("#blogMessages").on('click', '.post .replyForm .closeReply', function(){
-		closeReplyForm(this);
-	});
-
-	$("#blogMessages").on('click', '.post .replyForm .replyButton', function(){
-		var button = this;
-
-		var post = $(this).parents("div.post");
-		var form = $(this).closest(".replyForm");
-		var original_id = post.data("original_id");
-		var textArea = form.find(".postBody");
-		var body = $.trim(textArea.val());
-
-		if(body === '') {
-
-		} else {
-			button.disabled = true;
-			$.ajax({
-				url: 'replyToPost',
-				type: 'POST',
-				dataType: 'json',
-				data: {body: body, original_id: original_id},
-				success: function(data) {
-					closeReplyForm(button);
-
-					textArea.val('');
-
-					getReplies(button);
-				},
-				complete: function() {
-					button.disabled = false;
-					//$(".ajaxLoading").fadeOut(300);
-				}
-			});
-		}	
-	});
-
-	$("#postButton").click(function() {
-		var body = $.trim($("#postBody").val());
-		if(body === '') {
-
-		} else {
-			this.disabled = true;
-			$.ajax({
-				url: 'makePost',
-				type: 'POST',
-				dataType: 'json',
-				data: {body: body},
-				success: function(data) {
-					/*
-					if(data.status) {
-						var mData = {body: body, date: data.date};
-						$("#postBody").val('');
-						$("#blogMessages").mustache('blog-post', mData, {method: 'prepend'});
-					}
-					*/
-					
-				},
-				complete: function() {
-					location.reload(true);
-				}
-			});
-		}	
-	});
-});

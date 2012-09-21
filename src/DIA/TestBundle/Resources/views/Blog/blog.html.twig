@@ -59,7 +59,7 @@
 								<span class="showConv hidden">{{'Show conversation' | trans}}</span>
 								<span class="hideConv hidden">{{'Hide conversation' | trans}}</span>
 							{% endif %}
-								<span class="reply">{{'Reply' | trans}}</span>
+								<span class="openReply">{{'Reply' | trans}}</span>
 							{% if userId != post.getUser().getId() %}
 								{% if post.isRepostedBy(userId) %}
 									<span class="info">{{'Already reposted' | trans}}</span>

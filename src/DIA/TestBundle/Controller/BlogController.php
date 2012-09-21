@@ -8,32 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BlogController extends Controller {
 
-	function __construct() {
-
-	}
-
-	public function testAction() {
-		$response = array();
-
-	  $request = $this->getRequest();
-	  $session = $request->getSession();
-	  $security = $this->get('security.context');
-
-	  $em = $this->getDoctrine()->getEntityManager();
-	  $post = $em->getRepository('DIATestBundle:BlogPosts')->findOneById(1);
-
-	  $reply = $post->getReplies();
-
-    $test = $reply->map(function( $obj ) { 
-        return $obj->getId(); 
-    })->toArray();
-
-	  $response['test'] = $test;
-
-
-		return new Response(json_encode($response));
-	}
-
 	public function rePostAction() {
 		$response = Array();
 		$response['status'] = false;
@@ -79,9 +53,6 @@ class BlogController extends Controller {
 	  $user = $token->getUser();
 	  $post = $em->getRepository('DIATestBundle:BlogPosts')->findOneById($postId);
 
-	  $response['test'] = $postId;
-	  $response['test2'] = $post->getId();
-
 	 	$post->deleteReposts();
 	 	$post->deleteReplies();
 
@@ -94,86 +65,59 @@ class BlogController extends Controller {
 		return new Response(json_encode($response));
 	}
 
-	public function mainAction() {
+	public function mainAction($userId = 0) {
 		$response = array();
 
 	  $request = $this->getRequest();
 	  $session = $request->getSession();
 	  $security = $this->get('security.context');
-
-	  $locale = $session->getLocale();
-
 	  $token = $security->getToken();
-	  $roles = $token->getRoles();
-	  $role = $roles[0]->getRole();
 
 	  $em = $this->getDoctrine()->getEntityManager();
-
   	$user = $token->getUser();
 
-	  $response['role'] = print_r($role, true);
-	  $response['locale'] = $locale;
-	  $response['userId'] = $user->getId();
-	  $response['blogOwnerId'] = $response['userId'];
+ 	  $response['userId'] = $user->getId();
 
-	  //$posts = $em->getRepository('DIATestBundle:BlogPosts')->findByUsers();
+  	$blogUser = $em->getRepository('DIATestBundle:User')->findOneById($userId);
+ 		if($blogUser) {
+ 	  	$foundBlog = true;
+ 	  	$response['blogHeader'] = $this->get('translator')->trans("%username%'s blog", array('%username%' => $blogUser->getUsername() ));
+ 		} else {
+ 	 		$blogUser = $user;
+ 			$foundBlog = false;
+ 			$response['blogHeader'] = $this->get('translator')->trans("My blog");
+    	$response['composeMessage'] = true;
+ 		}
 
-		$qb = $em->getRepository('DIATestBundle:BlogPosts')->createQueryBuilder('b');
-	  if($followedByMe = $user->getFollowedByMe(true)) {
+	  $response['blogOwnerId'] = $blogUser->getId();
 
-		  $posts = $qb->where($qb->expr()->in('b.user', $followedByMe))
-			  ->orWhere('b.user = :my_id')->setParameter('my_id', $user->getId())
-			  ->orderBy('b.created_at', 'DESC')
-		    ->getQuery()
-		    ->getResult();
-		  $count = count($posts);
+	  if(($followedByMe = $user->getFollowedByMe(true)) && !$foundBlog) {
+			$query = $em->createQuery('
+				SELECT p, rl, rl_to, rp, rp_or 
+					FROM DIATestBundle:BlogPosts p 
+					LEFT JOIN p.replies rl 
+					LEFT JOIN p.replyTo rl_to 
+					LEFT JOIN p.reposts rp 
+					LEFT JOIN p.originalPost rp_or 
+				WHERE p.user = :id 
+				OR p.user IN (:followed)
+				ORDER BY p.created_at DESC
+			')->setParameter('followed', implode(",", $followedByMe));
 	  } else {
-		  $posts = $qb->where('b.user = :id')->setParameter('id', $user->getId())
-			  ->orderBy('b.created_at', 'DESC')
-		    ->getQuery()
-		    ->getResult();
-		  $count = count($posts);
+			$query = $em->createQuery('
+				SELECT p, rl, rl_to, rp, rp_or 
+					FROM DIATestBundle:BlogPosts p 
+					LEFT JOIN p.replies rl 
+					LEFT JOIN p.replyTo rl_to 
+					LEFT JOIN p.reposts rp 
+					LEFT JOIN p.originalPost rp_or 
+				WHERE p.user = :id 
+				ORDER BY p.created_at DESC
+			');
 	  }
-
-    $response['blog'] = $posts;
-    $response['blogCount'] = $count;
-    $response['composeMessage'] = true;
-
-    $response['blogHeader'] = $this->get('translator')->trans("My blog");
-
-		return $this->render('DIATestBundle:Blog:blog.html.twig', $response);
-	}
-
-	public function getBlogAction($userId = 0) {
-		$response = array();
-
-	  $security = $this->get('security.context');
-	  $token = $security->getToken();
-	  $me = $token->getUser();
-
-	  $response['userId'] = $me->getId();
-
-	  $em = $this->getDoctrine()->getEntityManager();
-
-  	$user = $em->getRepository('DIATestBundle:User')->findOneById($userId);
-
- 		if(!$user) return $this->redirect($this->generateUrl('blog_main'));
-
- 		$response['blogOwnerId'] = $userId;
-
-	  $qb = $em->getRepository('DIATestBundle:BlogPosts')->createQueryBuilder('b');
-
-	  $posts = $qb->where('b.user = :id')->setParameter('id', $user->getId())
-		  ->orderBy('b.created_at', 'DESC')
-	    ->getQuery()
-	    ->getResult();
-
-	  $count = count($posts);
-
-    $response['blog'] = $posts;
-    $response['blogCount'] = $count;
-
-    $response['blogHeader'] = $this->get('translator')->trans("%username%'s blog", array('%username%' => $user->getUsername() ));
+	  $query->setParameter('id', $blogUser->getId());
+		$response['blog'] = $posts = $query->getResult();
+	  $response['blogCount'] = $count = count($posts);
 
 		return $this->render('DIATestBundle:Blog:blog.html.twig', $response);
 	}

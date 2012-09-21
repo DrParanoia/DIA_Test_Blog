@@ -4,7 +4,7 @@ blog_main:
 
 blog_main_by_user:
     pattern:  /{userId}
-    defaults: { _controller: DIATestBundle:Blog:getBlog, userId:0}
+    defaults: { _controller: DIATestBundle:Blog:main, userId:0}
     requirements:
         userId:  \d+
 
@@ -34,10 +34,6 @@ get_conv:
     defaults: {_controller: DIATestBundle:Blog:getConv}
     requirements:
         id: \d+
-
-test:
-    pattern: /test
-    defaults: {_controller: DIATestBundle:Blog:test}
 
 blog_settings:
     pattern: /settings

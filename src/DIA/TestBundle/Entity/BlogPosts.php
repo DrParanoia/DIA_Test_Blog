@@ -240,4 +240,24 @@ class BlogPosts
     {
         return $this->originalPost;
     }
+
+    /**
+     * Set replies
+     *
+     * @param DIA\TestBundle\Entity\BlogPosts $replies
+     */
+    public function setReplies(\DIA\TestBundle\Entity\BlogPosts $replies)
+    {
+        $this->replies = $replies;
+    }
+
+    /**
+     * Set reposts
+     *
+     * @param DIA\TestBundle\Entity\BlogPosts $reposts
+     */
+    public function setReposts(\DIA\TestBundle\Entity\BlogPosts $reposts)
+    {
+        $this->reposts = $reposts;
+    }
 }
