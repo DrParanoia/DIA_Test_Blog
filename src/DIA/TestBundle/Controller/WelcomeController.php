@@ -6,6 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use DIA\TestBundle\Entity\User;
 
+use DIA\TestBundle\Form\Type\RegistrationType;
+use DIA\TestBundle\Form\Model\Registration;
+
 class WelcomeController extends Controller {
 
     public function indexAction() {
@@ -15,14 +18,6 @@ class WelcomeController extends Controller {
         $locale = $session->getLocale();
 
         return $this->redirect($locale);
-    }
-
-    public function registerUser() {
-
-    }
-
-    public function regComplete() {
-        
     }
 
     public function welcomeAction() {
@@ -49,10 +44,12 @@ class WelcomeController extends Controller {
         return $this->render('DIATestBundle:Welcome:welcome.html.twig', array(
             // last username entered by the user
             'last_username'     => $session->get(SecurityContext::LAST_USERNAME),
-            'error'             => $error,
-            'locale'            => $locale
+            'error'             => $error
         ));
-        //return $this->render('DIATestBundle:Welcome:welcome.html.twig', array('test' => $test));
+    }
+
+    public function regSuccessAction() {
+        return $this->render('DIATestBundle:Welcome:registerSuccess.html.twig');    
     }
 
     public function registerAction() {
@@ -60,6 +57,51 @@ class WelcomeController extends Controller {
 
         $security = $this->get('security.context');
         $request = $this->getRequest();
+
+        $regForm = $this->createForm(new RegistrationType(), new Registration());
+
+
+        $auth = $security->isGranted('IS_AUTHENTICATED_FULLY');
+
+        if($auth) {
+            return $this->redirect($this->generateUrl('blog_main'));
+        }
+
+        if($request->getMethod() == 'POST') {
+            $regForm->bindRequest($this->getRequest());
+
+            if ($regForm->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $newUser = $regForm->getData()->getUser();
+
+                $factory = $this->get( 'security.encoder_factory' );
+                $encoder = $factory->getEncoder( $newUser );
+                $encodedPassword = $encoder->encodePassword( $newUser->getPassword(), $newUser->getSalt() );
+
+                $newUser->setPassword( $encodedPassword );
+
+                $em->persist($newUser);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('register_success'));
+            }
+        }
+
+        $response['regForm'] = $regForm->createView();
+
+        return $this->render('DIATestBundle:Welcome:register.html.twig', $response);   
+    }
+
+    public function register2Action() {
+        $response = Array();
+
+        $security = $this->get('security.context');
+        $request = $this->getRequest();
+
+        $regForm = $this->createForm(new RegistrationType(), new Registration());
+
+        $response['regForm'] = $regForm->createView();
 
         $auth = $security->isGranted('IS_AUTHENTICATED_FULLY');
 

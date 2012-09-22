@@ -1,32 +1,46 @@
 {% extends 'DIATestBundle::layout.html.twig' %}
 
+{% form_theme regForm _self %}
+
+{% block generic_label %}
+{% spaceless %}
+    {% if required %}
+        {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
+        {% set reqMark = '*' %}
+    {% endif %}
+    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{{reqMark}}&nbsp;{{ label|trans }}</label>
+{% endspaceless %}
+{% endblock %}
+
 {% block stylesheets %}      
 	<link href="{{ asset('css/forms.css') }}" type="text/css" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
 		<h3>{{'Registration' | trans}}</h3>
-		<form action="" method="post" class="login">
-				{% if errors.username.taken %}<label for="password" class="error">{{"Username taken" | trans}}:</label>{% endif %}
+		<form action="" method="post" class="login" novalidate>
+			{{form_errors(regForm.user.username)}}
+			{{form_label(regForm.user.username)}}
+			{{form_widget(regForm.user.username)}}
 
-		  	<label for="username"{% if errors.username.empty %} class="error"{% endif %}>*{{'Username' | trans}}:</label>
-		 		<input type="text" id="username" name="username" value="{{app.request.get('username')}}">
+			{% if not form_errors(regForm.user.password) %}
+				{{form_errors(regForm)}}
+			{% endif %}
+			{{form_label(regForm.user.password.password)}}
+			{{form_widget(regForm.user.password.password)}}
 
-		  	<label for="password"{% if errors.password.empty %} class="error"{% endif %}>*{{'Password' | trans}}:</label>
-		  	<input type="password" id="password" name="password">
+			{{form_errors(regForm.user.password)}}
+			{{form_label(regForm.user.password.confirm, "Repeat password")}}
+			{{form_widget(regForm.user.password.confirm)}}
 
-		  	{% if errors.password.match %}<label for="password" class="error">{{"Passwords don't match" | trans}}:</label>{% endif %}
+			{{form_row(regForm.user.first_name)}}
 
-		  	<label for="re_password"{% if errors.re_password.empty %} class="error"{% endif %}>*{{'Repeat password' | trans}}:</label>
-		  	<input type="password" id="re_password" name="re_password">
+			{{form_row(regForm.user.last_name)}}
 
-		  	<label for="first_name">{{'First name' | trans}}:</label>
-		  	<input type="text" id="first_name" name="first_name" value="{{app.request.get('first_name')}}">
+			{{form_rest(regForm)}}
 
-		  	<label for="last_name">{{'Last name' | trans}}:</label>
-		  	<input type="text" id="last_name" name="last_name" value="{{app.request.get('last_name')}}">
-
-		  	<button type="submit">{{'Register' | trans}}</button>
+			<button type="submit">{{'Register' | trans}}</button>
 		</form>
+
 		<a href="{{path('DIATestBundle_homepage')}}">{{'Main page' | trans}}</a>
 {% endblock %}

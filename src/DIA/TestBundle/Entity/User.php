@@ -4,9 +4,12 @@ namespace DIA\TestBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * DIA\TestBundle\Entity\User
+ * @UniqueEntity(fields="username", message="Username taken")
  */
 class User implements UserInterface {
     /**
@@ -20,6 +23,7 @@ class User implements UserInterface {
      *
      *
      * @var string $username
+     * @Assert\NotBlank(message="Please enter username")
      */
     private $username;
 
@@ -27,9 +31,9 @@ class User implements UserInterface {
      *
      *
      * @var string $password
+     * @Assert\NotBlank(message="Please enter password")
      */
     private $password;
-
 
     /**
      * Get id
@@ -96,7 +100,7 @@ class User implements UserInterface {
      *
      * @var string $roles
      */
-    private $roles;
+    private $roles = 'ROLE_USER';
 
 
     /**

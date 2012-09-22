@@ -8,8 +8,9 @@ form.login label {
 	display: block;
 	margin: 10px 0 5px;
 }
-form.login label.error {
+form.login li {
 	color: red;
+	margin-top: 10px;
 }
 
 form.login input {

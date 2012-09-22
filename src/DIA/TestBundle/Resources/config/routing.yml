@@ -5,6 +5,9 @@ DIATestBundle_homepage:
 register:
     pattern:  /register
     defaults: { _controller: DIATestBundle:Welcome:register }
+register_success:
+    pattern:  /registerSuccessfull
+    defaults: { _controller: DIATestBundle:Welcome:regSuccess }
 
 DIATestBundle_main:
     resource: "@DIATestBundle/Resources/config/routing/blog.yml"

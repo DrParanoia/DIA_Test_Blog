@@ -15,13 +15,15 @@ DIA\TestBundle\Entity\User:
     first_name:
       type: string
       length: 40
+      nullable: true
     last_name:
       type: string
       length: 40
+      nullable: true
     roles:
       type: string
       length: 40
-      default: 'ROLE_USER'
+      default: "ROLE_USER"
   oneToMany:
     posts:
       targetEntity: BlogPosts
